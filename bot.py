@@ -30,7 +30,7 @@ from telegram.ext import (
 # =========================
 # 🔐 CONFIG ADMIN
 # =========================
-ADMIN_IDS = [123456789]  # 👉 remplace par TON ID
+ADMIN_IDS = [7609447625]  # 👉 remplace par TON ID
 VIP_USERS = set()
 
 # =========================
