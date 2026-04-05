@@ -2,13 +2,30 @@
 # 🤖 TELEGRAM BOT PRO MAX (SYNC FINAL)
 # =========================
 
+# =========================
+# 🔐 CONFIG TOKEN (.env)
+# =========================
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+TOKEN = os.getenv("BOT_TOKEN")
+
+# Vérification token
+if not TOKEN:
+    raise ValueError("❌ BOT_TOKEN manquant dans le fichier .env")
+
+# =========================
+# IMPORT TELEGRAM
+# =========================
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 # =========================
-# 🔐 CONFIG
+# 🔐 CONFIG ADMIN
 # =========================
-ADMIN_IDS = [7609447625]  # 👉 remplace par TON ID
+ADMIN_IDS = [123456789]  # 👉 remplace par TON ID
 VIP_USERS = set()
 
 # =========================
@@ -147,6 +164,7 @@ async def help_admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(
             "📖 GUIDE ADMIN PRO MAX\n\n"
             "🎮 COMMANDES:\n"
+            "/start → démarrer le bot\n"
             "/free → matchs gratuits\n"
             "/vip → analyse VIP\n"
             "/admin → stratégie complète\n"
@@ -157,7 +175,7 @@ async def help_admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
             "/listvip\n\n"
             "🧠 STRUCTURE:\n"
             "FREE → Top 3\n"
-            "VIP → FAR + analyse\n"
+            "VIP → Analyse avancée\n"
             "ADMIN → stratégie + score exact\n\n"
             "🚀 CONSEIL:\n"
             "Toujours valider avec ADMIN"
@@ -169,7 +187,7 @@ async def help_admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # 🚀 MAIN
 # =========================
 def main():
-    app = ApplicationBuilder().token("TON_TOKEN_BOT").build()
+    app = ApplicationBuilder().token(TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("free", free))
@@ -186,5 +204,8 @@ def main():
     print("✅ BOT PRO MAX LANCÉ")
     app.run_polling()
 
+# =========================
+# ▶️ RUN
+# =========================
 if __name__ == "__main__":
     main()
