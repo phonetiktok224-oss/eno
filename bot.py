@@ -1,5 +1,5 @@
 # =========================
-# 🤖 TELEGRAM BOT PRO MAX (SYNC FINAL)
+# 🤖 TELEGRAM BOT PRO MAX (SYNC FINAL + BUTTONS)
 # =========================
 
 # =========================
@@ -12,15 +12,20 @@ load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
 
-# Vérification token
 if not TOKEN:
     raise ValueError("❌ BOT_TOKEN manquant dans le fichier .env")
 
 # =========================
 # IMPORT TELEGRAM
 # =========================
-from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+from telegram import Update, ReplyKeyboardMarkup
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    ContextTypes,
+    MessageHandler,
+    filters
+)
 
 # =========================
 # 🔐 CONFIG ADMIN
@@ -45,6 +50,16 @@ def safe_call(func):
         return ["❌ Erreur récupération des matchs"]
 
 # =========================
+# 🎛 MENU BOUTONS
+# =========================
+def get_main_keyboard():
+    keyboard = [
+        ["🆓 FREE", "💎 VIP"],
+        ["👑 ADMIN", "🎯 SCORE"]
+    ]
+    return ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+
+# =========================
 # 🎮 START
 # =========================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -52,7 +67,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "🤖 BOT PRONOS PRO MAX\n\n"
         "🆓 /free → Matchs gratuits\n"
         "💎 /vip → Analyse VIP\n"
-        "👑 /admin → Mode Pro\n"
+        "👑 /admin → Mode Pro\n\n"
+        "👇 Utilise les boutons ci-dessous",
+        reply_markup=get_main_keyboard()
     )
 
 # =========================
@@ -184,6 +201,27 @@ async def help_admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("❌ Réservé ADMIN")
 
 # =========================
+# 🎛 GESTION BOUTONS
+# =========================
+async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
+
+    if text == "🆓 FREE":
+        await free(update, context)
+
+    elif text == "💎 VIP":
+        await vip(update, context)
+
+    elif text == "👑 ADMIN":
+        await admin(update, context)
+
+    elif text == "🎯 SCORE":
+        await score(update, context)
+
+    else:
+        await update.message.reply_text("❌ Option inconnue")
+
+# =========================
 # 🚀 MAIN
 # =========================
 def main():
@@ -200,6 +238,9 @@ def main():
     app.add_handler(CommandHandler("listvip", list_vip))
 
     app.add_handler(CommandHandler("help", help_admin))
+
+    # 🔥 HANDLER BOUTONS
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_buttons))
 
     print("✅ BOT PRO MAX LANCÉ")
     app.run_polling()
