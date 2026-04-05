@@ -1,58 +1,45 @@
 # =========================
-# 🎮 GAMES ENGINE PRO MAX
+# 🎮 GAMES ENGINE FINAL PRO
 # =========================
 import random
 from datetime import datetime
 from ai_engine import analyse_match
 from data_sources import get_all_matches
+from odds_api import fetch_odds
 
 # =========================
-# NORMALISATION MATCHS
+# NORMALISATION
 # =========================
 def normalize_match(m):
+    if not m.get("home") or not m.get("away") or not m.get("date"):
+        return None
+
     return {
-        "home": m.get("home", "Team A"),
-        "away": m.get("away", "Team B"),
+        "home": m["home"],
+        "away": m["away"],
         "league": m.get("league", "Unknown"),
-        "date": m.get("date", datetime.utcnow().strftime("%Y-%m-%d %H:%M"))
+        "date": m["date"]
     }
 
 # =========================
-# MATCHS DU JOUR
+# MATCHS API ONLY
 # =========================
 def today_matches():
     matches = []
 
     try:
-        for m in get_all_matches():
+        data = get_all_matches()
+
+        for m in data:
             m = normalize_match(m)
-            matches.append(m)
+            if m:
+                matches.append(m)
 
-        if matches:
-            return matches[:15]
+    except Exception as e:
+        print("❌ MATCH API ERROR:", e)
+        return []
 
-    except:
-        pass
-
-    # fallback solide
-    return [
-        {"home": "PSG", "away": "Marseille", "league": "Ligue 1", "date": "2026-04-05 20:00"},
-        {"home": "Barcelona", "away": "Real Madrid", "league": "La Liga", "date": "2026-04-05 21:00"},
-    ]
-
-# =========================
-# 📊 COTES BOOKMAKER
-# =========================
-def generate_odds(confidence):
-    base = round(100 / max(confidence, 50), 2)
-
-    return {
-        "home_win": round(base, 2),
-        "draw": round(base + 0.8, 2),
-        "away_win": round(base + 1.2, 2),
-        "over25": round(base - 0.3, 2),
-        "btts": round(base - 0.5, 2)
-    }
+    return matches[:20]
 
 # =========================
 # FORMAT
@@ -62,22 +49,47 @@ def format_match(m):
     return f"{m['home']} vs {m['away']}\n🕒 {dt.strftime('%H:%M')} | 📅 {dt.strftime('%d-%m-%Y')} | 🏆 {m['league']}"
 
 # =========================
-# 🔥 TOP 3
+# ADMIN LOGIQUE
+# =========================
+def build_admin_choices(res, odds_data=None):
+    conf = res["confidence"]
+
+    boost = 0
+    if odds_data:
+        boost = random.randint(1, 3)  # < 10%
+
+    choice1 = {
+        "label": "Favori marque 1 à 3 buts",
+        "prob": min(92, conf + boost + random.randint(2, 6))
+    }
+
+    early_goal = random.choice([True, False])
+
+    choice2 = {
+        "label": "But avant 20 min" if early_goal else "Pas de but avant 20 min",
+        "prob": max(55, min(90, conf + boost + random.randint(-3, 4)))
+    }
+
+    return choice1, choice2
+
+# =========================
+# TOP 3
 # =========================
 def top3_games():
+    matches = today_matches()
+
+    if not matches:
+        return ["❌ Aucun match disponible (API)"]
+
     results = []
 
-    for m in today_matches():
+    for m in matches:
         res = analyse_match(m["home"], m["away"])
-        odds = generate_odds(res["confidence"])
 
         txt = f"""{format_match(m)}
 
-🔥 Choix: {res['prediction']}
-📊 Confiance: {res['confidence']}%
-
-💰 Cotes:
-🏠 {odds['home_win']} | 🤝 {odds['draw']} | 🛫 {odds['away_win']}
+🔥 {res['prediction']}
+📊 {res['confidence']}%
 """
         results.append((res["confidence"], txt))
 
@@ -85,22 +97,23 @@ def top3_games():
     return [r[1] for r in results[:3]]
 
 # =========================
-# 💎 VIP
+# VIP
 # =========================
 def vip_games():
+    matches = today_matches()
+
+    if not matches:
+        return ["❌ Aucun match API"]
+
     results = []
 
-    for m in today_matches():
+    for m in matches:
         res = analyse_match(m["home"], m["away"])
-        odds = generate_odds(res["confidence"])
 
         txt = f"""{format_match(m)}
 
-📊 Analyse: {res['prediction']}
-💎 Confiance: {res['confidence']}%
-
-💰 Over 2.5: {odds['over25']}
-⚽ BTTS: {odds['btts']}
+💎 {res['prediction']}
+🔥 Confiance: {res['confidence']}%
 """
         results.append((res["confidence"], txt))
 
@@ -108,38 +121,48 @@ def vip_games():
     return [r[1] for r in results[:8]]
 
 # =========================
-# 👑 ADMIN VIP = BOOKMAKER 😈
+# ADMIN VIP
 # =========================
 def admin_vip_games():
+    matches = today_matches()
+
+    if not matches:
+        return ["❌ Aucun match API"]
+
     results = []
 
-    for m in today_matches():
+    for m in matches:
         res = analyse_match(m["home"], m["away"])
-        odds = generate_odds(res["confidence"])
+
+        odds_data = fetch_odds(m["home"], m["away"])
+
+        c1, c2 = build_admin_choices(res, odds_data)
+
+        corners = random.randint(8, 13)
+        cards = random.randint(3, 6)
+        touches = random.randint(20, 45)
 
         txt = f"""{format_match(m)}
 
-👑 BOOKMAKER MODE
+👑 ADMIN VIP PRO
 
-📊 Prédiction: {res['prediction']}
-🔥 Confiance: {res['confidence']}%
+🎯 OPTIONS PRINCIPALES
 
-💰 MARCHÉS:
+1️⃣ {c1['label']}
+📊 {c1['prob']}%
 
-🏆 1X2:
-- Victoire domicile: {odds['home_win']}
-- Nul: {odds['draw']}
-- Extérieur: {odds['away_win']}
+2️⃣ {c2['label']}
+📊 {c2['prob']}%
 
-⚽ BUTS:
-- Over 2.5: {odds['over25']}
-- BTTS: {odds['btts']}
+📊 OPTIONS SECONDAIRES
 
-🎯 SCORE EXACT:
-→ {res['score']}
+📐 Corners: {corners}
+🟨 Cartons: {cards}
+📍 Touches: {touches}
 
-🧠 STRATÉGIE:
-Match exploitable avec avantage statistique clair
+🧠 IA: {res['prediction']} ({res['confidence']}%)
+
+⚠️ Pénalty / Expulsion exclus
 """
         results.append((res["confidence"], txt))
 
@@ -147,12 +170,17 @@ Match exploitable avec avantage statistique clair
     return [r[1] for r in results[:10]]
 
 # =========================
-# 🎯 SCORE EXACT
+# SCORE EXACT
 # =========================
 def score_exact_vip():
+    matches = today_matches()
+
+    if not matches:
+        return ["❌ Aucun match API"]
+
     results = []
 
-    for m in today_matches():
+    for m in matches:
         res = analyse_match(m["home"], m["away"])
 
         txt = f"""{format_match(m)}
