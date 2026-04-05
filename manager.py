@@ -1,27 +1,44 @@
-import csv
-import os
+# =========================
+# DATA SOURCES MANAGER
+# =========================
 
-FILE = "matches.csv"
+from .api_source import get_matches_api
+from .scraper_source import get_matches_scraping
+from .csv_source import get_matches_csv
 
-def get_matches_csv():
-    if not os.path.exists(FILE):
-        return []
+# =========================
+# REMOVE DOUBLONS
+# =========================
+def remove_duplicates(matches):
+    seen = set()
+    unique = []
 
-    matches = []
+    for m in matches:
+        key = (m.get("home"), m.get("away"), m.get("date"))
 
-    try:
-        with open(FILE, newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
+        if key not in seen:
+            seen.add(key)
+            unique.append(m)
 
-            for row in reader:
-                matches.append({
-                    "home": row.get("HomeTeam"),
-                    "away": row.get("AwayTeam"),
-                    "date": row.get("Date"),
-                    "league": "CSV"
-                })
+    return unique
 
-    except Exception as e:
-        print("CSV ERROR:", e)
+# =========================
+# MAIN FUNCTION (IMPORTANT)
+# =========================
+def get_all_matches():
+    all_matches = []
 
-    return matches
+    for source in [
+        get_matches_api,
+        get_matches_scraping,
+        get_matches_csv
+    ]:
+        try:
+            data = source()
+            if data:
+                all_matches.extend(data)
+        except Exception as e:
+            print("SOURCE ERROR:", e)
+            continue
+
+    return remove_duplicates(all_matches)
