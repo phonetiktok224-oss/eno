@@ -21,7 +21,7 @@ from subscription import check_sub
 from payment import process_payment
 from database import *
 
-# ✅ NOUVEAU MODULE JEUX
+# ✅ MODULE JEUX
 from games import (
     top3_games,
     vip_games,
@@ -82,7 +82,7 @@ markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
 # =========================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
-        "🔥 Bienvenue sur le BOT PRONOS PRO",
+        "🔥 Bienvenue sur le BOT PRONOS PRO\n📊 Matchs du jour + Stats avancées",
         reply_markup=markup
     )
 
@@ -125,6 +125,9 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("\n\n".join(data))
         return
 
+    # ✅ sécurité ajoutée
+    await update.message.reply_text("❌ Option inconnue")
+
 # =========================
 # MAIN
 # =========================
@@ -134,7 +137,7 @@ def main():
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_buttons))
 
-    print("🚀 BOT ACTIF FINAL")
+    print("🚀 BOT ACTIF FINAL PRO")
     app.run_polling()
 
 if __name__ == "__main__":
