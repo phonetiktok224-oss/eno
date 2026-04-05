@@ -1,118 +1,97 @@
-import os
+# =========================
+# 🌐 DATA SOURCES PRO MAX (MULTI API + SECURE)
+# =========================
+
 import requests
-from dotenv import load_dotenv
-from datetime import datetime, timedelta
+from datetime import datetime
 
-load_dotenv()
-
-SPORTMONKS_KEY = os.getenv("SPORTMONKS_KEY")
-FOOTBALL_DATA_KEY = os.getenv("FOOTBALL_DATA_KEY")
-API_FOOTBALL_KEY = os.getenv("API_KEY")
+API_KEYS = [
+    "574429af1fa8d741a94929ecb71353dae87ea152ca77e856b8fdb6f6fc36de2b",
+    "39d58474dddabacad4a8181186ee72ce",
+    "2148a5436bff4a92832aa2d5d8ff1882"
+]
 
 # =========================
-# 🔥 SPORTMONKS
+# 🔁 ROTATION API KEYS
 # =========================
-def get_sportmonks_matches():
-    if not SPORTMONKS_KEY:
+def fetch_api(url):
+    for key in API_KEYS:
+        try:
+            headers = {"x-apisports-key": key}
+            res = requests.get(url, headers=headers, timeout=10)
+
+            if res.status_code == 200:
+                data = res.json()
+                if data.get("response"):
+                    return data
+
+        except Exception as e:
+            print("❌ API error:", e)
+
+    return None
+
+
+# =========================
+# 📡 API FOOTBALL
+# =========================
+def get_matches_api():
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    url = f"https://v3.football.api-sports.io/fixtures?date={today}"
+    data = fetch_api(url)
+
+    if not data:
         return []
 
-    try:
-        url = f"https://api.sportmonks.com/v3/football/fixtures?api_token={SPORTMONKS_KEY}"
-        res = requests.get(url).json()
+    matches = []
 
-        matches = []
-        for m in res.get("data", []):
-            matches.append({
-                "home": m["participants"][0]["name"],
-                "away": m["participants"][1]["name"]
-            })
+    for m in data.get("response", []):
+        matches.append({
+            "home": m["teams"]["home"]["name"],
+            "away": m["teams"]["away"]["name"],
+            "league": m["league"]["name"],
+            "date": m["fixture"]["date"]
+        })
 
-        return matches
+    return matches
 
-    except Exception as e:
-        print("SportMonks error:", e)
-        return []
 
 # =========================
-# 🔥 FOOTBALL-DATA
+# 🔁 FALLBACK
 # =========================
-def get_football_data_matches():
-    if not FOOTBALL_DATA_KEY:
-        return []
+def fallback_matches():
+    today = datetime.now().strftime("%Y-%m-%d %H:%M")
 
-    try:
-        url = "https://api.football-data.org/v4/matches"
-        headers = {"X-Auth-Token": FOOTBALL_DATA_KEY}
-
-        res = requests.get(url, headers=headers).json()
-
-        matches = []
-        for m in res.get("matches", []):
-            matches.append({
-                "home": m["homeTeam"]["name"],
-                "away": m["awayTeam"]["name"]
-            })
-
-        return matches
-
-    except Exception as e:
-        print("Football-Data error:", e)
-        return []
-
-# =========================
-# 🔥 API-FOOTBALL (EXISTANT)
-# =========================
-def get_api_football_matches():
-    if not API_FOOTBALL_KEY:
-        return []
-
-    today = datetime.today().strftime('%Y-%m-%d')
-    tomorrow = (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d')
-
-    try:
-        url = f"https://v3.football.api-sports.io/fixtures?from={today}&to={tomorrow}"
-        headers = {"x-apisports-key": API_FOOTBALL_KEY}
-
-        res = requests.get(url, headers=headers).json()
-
-        matches = []
-        for m in res.get("response", []):
-            matches.append({
-                "home": m["teams"]["home"]["name"],
-                "away": m["teams"]["away"]["name"]
-            })
-
-        return matches
-
-    except Exception as e:
-        print("API-Football error:", e)
-        return []
-
-# =========================
-# 🔥 FUSION INTELLIGENTE
-# =========================
-def get_all_matches():
-    all_matches = []
-
-    sources = [
-        get_api_football_matches(),
-        get_sportmonks_matches(),
-        get_football_data_matches()
+    return [
+        {"home": "Real Madrid", "away": "Barcelona", "league": "Liga", "date": today},
+        {"home": "PSG", "away": "Marseille", "league": "Ligue 1", "date": today}
     ]
 
-    for source in sources:
-        all_matches.extend(source)
 
-    # 🔥 SUPPRIMER DOUBLONS
-    unique = []
+# =========================
+# 🧹 CLEAN
+# =========================
+def clean(matches):
     seen = set()
+    final = []
 
-    for m in all_matches:
-        key = f"{m['home']} vs {m['away']}"
+    for m in matches:
+        key = (m["home"], m["away"], m["date"])
         if key not in seen:
             seen.add(key)
-            unique.append(m)
+            final.append(m)
 
-    print(f"✅ TOTAL MATCHES: {len(unique)}")
+    return final
 
-    return unique
+
+# =========================
+# 🚀 MAIN
+# =========================
+def get_all_matches():
+    matches = get_matches_api()
+
+    if not matches:
+        print("⚠️ fallback utilisé")
+        matches = fallback_matches()
+
+    return clean(matches)

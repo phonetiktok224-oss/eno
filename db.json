@@ -1,0 +1,255 @@
+{
+  "vip": [],
+  "history": [
+    {
+      "match": "Real Madrid vs Barcelona",
+      "prediction": "Barcelona gagne",
+      "confidence": 72
+    },
+    {
+      "match": "Man City vs Liverpool",
+      "prediction": "Match nul",
+      "confidence": 69
+    },
+    {
+      "match": "PSG vs Marseille",
+      "prediction": "Match nul",
+      "confidence": 70
+    },
+    {
+      "match": "Bayern vs Dortmund",
+      "prediction": "Match nul",
+      "confidence": 70
+    },
+    {
+      "match": "Juventus vs Milan",
+      "prediction": "Match nul",
+      "confidence": 67
+    },
+    {
+      "match": "Real Madrid vs Barcelona",
+      "prediction": "Real Madrid gagne",
+      "confidence": 74
+    },
+    {
+      "match": "Man City vs Liverpool",
+      "prediction": "Match nul",
+      "confidence": 63
+    },
+    {
+      "match": "PSG vs Marseille",
+      "prediction": "Marseille gagne",
+      "confidence": 75
+    },
+    {
+      "match": "Bayern vs Dortmund",
+      "prediction": "Bayern gagne",
+      "confidence": 74
+    },
+    {
+      "match": "Juventus vs Milan",
+      "prediction": "Match nul",
+      "confidence": 63
+    },
+    {
+      "match": "Municipal Grecia vs Quepos Cambute",
+      "prediction": "Municipal Grecia gagne",
+      "confidence": 74
+    },
+    {
+      "match": "Rosario Central vs Atletico Tucuman",
+      "prediction": "Atletico Tucuman gagne",
+      "confidence": 72
+    },
+    {
+      "match": "Vasco DA Gama vs Botafogo",
+      "prediction": "Match nul",
+      "confidence": 68
+    },
+    {
+      "match": "Sporting KC II vs North Texas",
+      "prediction": "North Texas gagne",
+      "confidence": 73
+    },
+    {
+      "match": "Emelec vs Deportivo Cuenca",
+      "prediction": "Deportivo Cuenca gagne",
+      "confidence": 72
+    },
+    {
+      "match": "Houston Dynamo vs Seattle Sounders",
+      "prediction": "Houston Dynamo gagne",
+      "confidence": 88
+    },
+    {
+      "match": "Chicago Fire vs Nashville SC",
+      "prediction": "Match nul",
+      "confidence": 62
+    },
+    {
+      "match": "Deportes Tolima vs Santa Fe",
+      "prediction": "Match nul",
+      "confidence": 69
+    },
+    {
+      "match": "Seattle Reign FC vs Denver Summit W",
+      "prediction": "Seattle Reign FC gagne",
+      "confidence": 76
+    },
+    {
+      "match": "Boise vs Spokane Velocity",
+      "prediction": "Spokane Velocity gagne",
+      "confidence": 79
+    },
+    {
+      "match": "El Paso Locomotive vs Las Vegas Lights",
+      "prediction": "Match nul",
+      "confidence": 62
+    },
+    {
+      "match": "Leones Negros UDG vs Monarcas",
+      "prediction": "Match nul",
+      "confidence": 65
+    },
+    {
+      "match": "Alianza vs H\u00e9rcules",
+      "prediction": "Alianza gagne",
+      "confidence": 77
+    },
+    {
+      "match": "Inter vs Isidro Metap\u00e1n",
+      "prediction": "Isidro Metap\u00e1n gagne",
+      "confidence": 75
+    },
+    {
+      "match": "Municipal Lime\u00f1o vs \u00c1guila",
+      "prediction": "\u00c1guila gagne",
+      "confidence": 71
+    },
+    {
+      "match": "Universitario vs Alianza Lima",
+      "prediction": "Alianza Lima gagne",
+      "confidence": 77
+    },
+    {
+      "match": "Cruz Azul vs Pachuca",
+      "prediction": "Match nul",
+      "confidence": 69
+    },
+    {
+      "match": "Leon vs Atlas",
+      "prediction": "Match nul",
+      "confidence": 66
+    },
+    {
+      "match": "Los Angeles FC vs Orlando City SC",
+      "prediction": "Orlando City SC gagne",
+      "confidence": 72
+    },
+    {
+      "match": "Tauro FC vs Plaza Amador",
+      "prediction": "Plaza Amador gagne",
+      "confidence": 80
+    },
+    {
+      "match": "Municipal Grecia vs Quepos Cambute",
+      "prediction": "Match nul",
+      "confidence": 68
+    },
+    {
+      "match": "Rosario Central vs Atletico Tucuman",
+      "prediction": "Match nul",
+      "confidence": 64
+    },
+    {
+      "match": "Vasco DA Gama vs Botafogo",
+      "prediction": "Vasco DA Gama gagne",
+      "confidence": 78
+    },
+    {
+      "match": "Sporting KC II vs North Texas",
+      "prediction": "North Texas gagne",
+      "confidence": 84
+    },
+    {
+      "match": "Emelec vs Deportivo Cuenca",
+      "prediction": "Match nul",
+      "confidence": 65
+    },
+    {
+      "match": "Houston Dynamo vs Seattle Sounders",
+      "prediction": "Match nul",
+      "confidence": 64
+    },
+    {
+      "match": "Chicago Fire vs Nashville SC",
+      "prediction": "Nashville SC gagne",
+      "confidence": 80
+    },
+    {
+      "match": "Deportes Tolima vs Santa Fe",
+      "prediction": "Match nul",
+      "confidence": 70
+    },
+    {
+      "match": "Seattle Reign FC vs Denver Summit W",
+      "prediction": "Match nul",
+      "confidence": 65
+    },
+    {
+      "match": "Boise vs Spokane Velocity",
+      "prediction": "Match nul",
+      "confidence": 70
+    },
+    {
+      "match": "El Paso Locomotive vs Las Vegas Lights",
+      "prediction": "El Paso Locomotive gagne",
+      "confidence": 79
+    },
+    {
+      "match": "Leones Negros UDG vs Monarcas",
+      "prediction": "Match nul",
+      "confidence": 65
+    },
+    {
+      "match": "Alianza vs H\u00e9rcules",
+      "prediction": "H\u00e9rcules gagne",
+      "confidence": 75
+    },
+    {
+      "match": "Inter vs Isidro Metap\u00e1n",
+      "prediction": "Match nul",
+      "confidence": 70
+    },
+    {
+      "match": "Municipal Lime\u00f1o vs \u00c1guila",
+      "prediction": "Municipal Lime\u00f1o gagne",
+      "confidence": 80
+    },
+    {
+      "match": "Universitario vs Alianza Lima",
+      "prediction": "Match nul",
+      "confidence": 67
+    },
+    {
+      "match": "Cruz Azul vs Pachuca",
+      "prediction": "Pachuca gagne",
+      "confidence": 78
+    },
+    {
+      "match": "Leon vs Atlas",
+      "prediction": "Match nul",
+      "confidence": 64
+    },
+    {
+      "match": "Los Angeles FC vs Orlando City SC",
+      "prediction": "Los Angeles FC gagne",
+      "confidence": 75
+    },
+    {
+      "match": "Tauro FC vs Plaza Amador",
+      "prediction": "Match nul",
+      "confidence": 63
+    }
+  ]
+}
