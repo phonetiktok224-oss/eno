@@ -1,31 +1,33 @@
-import os
 import requests
+from datetime import datetime
 
-API_KEY = os.getenv("FOOTBALL_API_KEY")
+API_KEY = "39d58474dddabacad4a8181186ee72ce"
 
 def get_matches_api():
-    if not API_KEY:
-        return []
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    url = f"https://v3.football.api-sports.io/fixtures?date={today}"
+
+    headers = {
+        "x-apisports-key": API_KEY
+    }
 
     try:
-        url = "https://api.football-data.org/v4/matches"
-        headers = {"X-Auth-Token": API_KEY}
-
-        res = requests.get(url, headers=headers, timeout=10)
-        data = res.json()
+        response = requests.get(url, headers=headers)
+        data = response.json()
 
         matches = []
 
-        for m in data.get("matches", []):
+        for match in data.get("response", []):
             matches.append({
-                "home": m["homeTeam"]["name"],
-                "away": m["awayTeam"]["name"],
-                "date": m["utcDate"][:16].replace("T", " "),
-                "league": m["competition"]["name"]
+                "home": match["teams"]["home"]["name"],
+                "away": match["teams"]["away"]["name"],
+                "date": match["fixture"]["date"],
+                "league": match["league"]["name"]
             })
 
         return matches
 
     except Exception as e:
-        print("API ERROR:", e)
+        print("Erreur API :", e)
         return []
