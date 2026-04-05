@@ -1,27 +1,9 @@
-import csv
-import os
-
-FILE = "matches.csv"
-
 def get_matches_csv():
-    if not os.path.exists(FILE):
-        return []
-
-    matches = []
-
-    try:
-        with open(FILE, newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-
-            for row in reader:
-                matches.append({
-                    "home": row.get("HomeTeam"),
-                    "away": row.get("AwayTeam"),
-                    "date": row.get("Date"),
-                    "league": "CSV"
-                })
-
-    except Exception as e:
-        print("CSV ERROR:", e)
-
-    return matches
+    # MATCHS FAKE (test)
+    return [
+        {"home": "Real Madrid", "away": "Barcelona", "date": "Aujourd'hui", "league": "Liga"},
+        {"home": "Man City", "away": "Liverpool", "date": "Aujourd'hui", "league": "Premier League"},
+        {"home": "PSG", "away": "Marseille", "date": "Aujourd'hui", "league": "Ligue 1"},
+        {"home": "Bayern", "away": "Dortmund", "date": "Aujourd'hui", "league": "Bundesliga"},
+        {"home": "Juventus", "away": "Milan", "date": "Aujourd'hui", "league": "Serie A"},
+    ]
