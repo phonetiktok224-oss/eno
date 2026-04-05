@@ -1,27 +1,33 @@
-import csv
-import os
+# =========================
+# SCRAPER SOURCE (SAFE)
+# =========================
+import requests
+from bs4 import BeautifulSoup
 
-FILE = "matches.csv"
-
-def get_matches_csv():
-    if not os.path.exists(FILE):
-        return []
-
-    matches = []
-
+def get_matches_scraping():
     try:
-        with open(FILE, newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
+        url = "https://www.flashscore.com.ng/football/"
+        headers = {"User-Agent": "Mozilla/5.0"}
 
-            for row in reader:
+        res = requests.get(url, headers=headers, timeout=10)
+        soup = BeautifulSoup(res.text, "html.parser")
+
+        matches = []
+
+        for m in soup.select(".event__match"):
+            home = m.select_one(".event__participant--home")
+            away = m.select_one(".event__participant--away")
+
+            if home and away:
                 matches.append({
-                    "home": row.get("HomeTeam"),
-                    "away": row.get("AwayTeam"),
-                    "date": row.get("Date"),
-                    "league": "CSV"
+                    "home": home.text.strip(),
+                    "away": away.text.strip(),
+                    "date": "",
+                    "league": "Scraped"
                 })
 
-    except Exception as e:
-        print("CSV ERROR:", e)
+        return matches
 
-    return matches
+    except Exception as e:
+        print("SCRAPER ERROR:", e)
+        return []
